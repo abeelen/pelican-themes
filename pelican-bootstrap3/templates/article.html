@@ -74,7 +74,7 @@
                 <h1>
                     <a href="{{ SITEURL }}/{{ article.url }}"
                        rel="bookmark"
-                       title="Permalink to {{ article.title|striptags }}">
+                       title="{{ _('Permalink to') }} {{ article.title|striptags }}">
                         {{ article.title }}
                     </a>
                 </h1>
@@ -93,8 +93,8 @@
             {% include 'includes/addthis.html' %}
             {% include 'includes/shariff.html' %}
             {% include 'includes/comments.html' %}
-        </article>
-    </section>
+          </section>
+    </article>
 
 {% endblock %}
 
@@ -109,4 +109,22 @@
     <!-- add shariff support -->
     <script src="{{ SITEURL }}/{{ THEME_STATIC_DIR }}/js/shariff.min.js"></script>
 {% endif %}
+<!-- pelican_dynamic scripts -->
+{% if 'pelican_dynamic' in PLUGINS and article  %}
+   {% if article.scripts %}
+       {% for script in article.scripts %}
+{{ script }}
+       {% endfor %}
+   {% endif %}
+ {% endif %}
+{% endblock %}
+
+{% block dynamic_style %}
+   {% if 'pelican_dynamic' in PLUGINS %}
+     {% if article.styles %}
+       {% for style in article.styles %}
+       {{ style }}
+       {% endfor %}
+     {% endif %}
+   {% endif %}
 {% endblock %}

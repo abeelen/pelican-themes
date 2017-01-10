@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}Publications{% endblock %}
+{%block scripts %}
+<script type="text/javascript">
+    function disp(s) {
+        var win;
+        var doc;
+        win = window.open("", "WINDOWID");
+        doc = win.document;
+        doc.open("text/plain");
+        doc.write("<pre>" + s + "</pre>");
+        doc.close();
+    }
+</script>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}
+});
+</script>
+<script type="text/javascript"
+  src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+{% endblock %}
+
+{% block content %}
+<section id="content" class="body">
+  <h1 class="entry-title">Publications</h1>
+  {% for group in publications|groupby('year')|reverse %}
+  <div class="list-group">
+    <h4 class="list-group-item-heading">{{group.grouper}}</h4>
+    <ul class='list-group'>
+      {% for publication in group.list %}
+      <li id="{{ publication.key }}" class="list-group-item"> {{ publication.text | replace('{', '') | replace('}','') }}
+        [&nbsp;<a href="javascript:disp('{{ publication.bibtex|replace('\n', '\\n')|escape|forceescape }}');">Bibtex</a>&nbsp;]
+        {% for label, target in [('PDF', publication.pdf), ('Slides', publication.slides), ('Poster', publication.poster)] %}
+        {{ "[&nbsp;<a href=\"%s\">%s</a>&nbsp;]" % (target, label) if target }}
+        {% endfor %}
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+  {% endfor %}
+</section>
+{% endblock %}
